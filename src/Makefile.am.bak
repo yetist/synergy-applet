@@ -1,0 +1,48 @@
+## Process this file with automake to produce Makefile.in
+
+## Created by Anjuta
+
+
+
+AM_CPPFLAGS = \
+	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
+	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
+	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
+	$(SYNERGY_APPLET_CFLAGS)
+
+AM_CFLAGS =\
+	 -Wall\
+	 -g
+
+bin_PROGRAMS = synergy_applet
+
+synergy_applet_SOURCES = \
+	main.c          \
+	browse.c          \
+	browse.h          \
+	publish.c          \
+	publish.h          \
+	synergy-applet.c          \
+	synergy-applet.h          \
+	synergy-applet-impl.c \
+	synergy-applet.gob  \
+	synergy-applet.gob.stamp  \
+	settings.c
+	
+BUILT_SOURCES = synergy-applet.gob.stamp
+MAINTAINERCLEANFILES = synergy-applet.gob.stamp
+
+
+synergy_applet_LDFLAGS = \
+	-Wl,--export-dynamic
+
+synergy_applet_LDADD = $(SYNERGY_APPLET_LIBS)
+
+EXTRA_DIST = $(glade_DATA)
+
+%.c %.h %-private.h: %.gob
+	@GOB2@ $<
+
+%.gob.stamp: %.gob
+	@GOB2@ --no-touch $<
+	@touch $@
